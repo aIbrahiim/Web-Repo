@@ -2,29 +2,31 @@
 
 ## General Info
 
- - Current version : v1.0(Beta) 
- - Language : python v3.7
- - Framework : Django v2.2
- - Part of a graduation project 
+ -  current version : 0.9B 
+ - Language : python 3.7
+ - Framework : Django 2.2
+ - Part of a graduation project
+ - no for real use for now 
 
 ## How to install
 
- 1. Install Python v3.7 (or any latest version) from [here](https://www.python.org/)
+ 1. Install python 3.7 (or any latest version ) from [here](https://www.python.org/)
  2. Install any editor you want (I use Visual studio Code )
- 3. Clone the Repository
- 4. Install all of the required dependencies with command (pip install -r requirements.txt):
+ 3. Download the Repository
+ 4. Install all this required module
 	 -  Django v2.2
 	 -  django-filter
 	 -  djangorestframework
 	 -  djangorestframework-simplejwt
 	 -  Markdown
 	 -  mysqlclient (if you will use mysql)
-5. Download Postman (preferred)
+5. Download postman (preferred)
+6. Now you are ready to real work
 
 ## Configuration
 ### Database configuration
 To make this project ready to work with you need to configure the **database** setting
-and this can be done in the following easy steps.
+and this can be done in very easy steps.
 
 in ./Web-Repo/Tabib/setting.py
 
@@ -39,52 +41,53 @@ in ./Web-Repo/Tabib/setting.py
 		    }
 	}
 
- 1. **Engine** : Specify the database engine you wanna use. We use MySQL database.
- 2. **Name**  : Write the database name you will use **(It's important to create the database first, Django won't create it for you)**
+ 1. **Engine** : use  the database provider you want to use  here we use MySql database  if 				   you just leave this line as it
+ 2. **Name**  : Write the database name you will use **(important to create the database first django will not create it for you)**
  3. **USER** :  the server username 
- 4. **PASSWORD** : the server password
- 5.  **HOST** : host url **(could be localhost on dev mode)**
- 6. **PORT** : Specify the port you'd use here
+ 4. **PASSWORD** : server password
+ 5.  **HOST** : host url **( could be localhost if you will use it locally )**
+ 6. **PORT** : whatever the port you will use
 
+Now you will need couple of steps to finish
 
-**Now you'd need couple of steps to finish:**
-
-  First, make the initial migration by the following commands: 
+  First make migration by this command
+  
 
     python manage.py makemigrations
+
+ Second apply this migration
+ 
+
     python manage.py migrate
 
- Now you're ready to start the application, now we need to make sure there's a super account created:
+ by finishing to this two steps you are now read to use the project and be ready to coding 
+
+make sure to create superuser by run this command
 
     python manage.py createsuperuser
-
-To access all data and manage GO to this URL followed by /admin/ path 
-`http://whatever-url(would be localhost:8000 on dev mode)/admin/`  
-Use the username and password that you have just created above
-
----
+to access all data and mange use this url `admin/` use the username and password that you have just create 
 
 ## How to use
-The project for now only contains one app(the Registration & Login functionality), we'll continue to add to it in the future.
+By the time you read this document there is only this apps
 
  - accounts
 	 - Registration
 	 - Login
 
-You need to run the server to be able to see the app, run this command: 
+you need to run server to see a live version by this command
 
     python manage.py runserver
 
 ### accounts
  - **Registration**
-To create new user
-	- Go to this URL `(http://whatever-url(localhost):portHERE)/api/accounts/register/`
-	- If you will use the **browser** you will see something like any general form you've seen in previous websites. Just insert the data in empty fields/inputs and click **POST** 
-	- If you gonna use **Postman** you'd few other steps: 
-		-  First specify a request of type **POST**
-		-  Select **Body** tab  
+to create new user
+	- go to this url  `/api/accounts/register/`
+	- if you will use the **browser** you will see something like a general form that you could see in any website just insert data in empty fields then  click **post** 
+	- if you will use **postman** you will need more little steps 
+		-  first make request of type **POST**
+		-  Select **Body**  
 		-  Select raw --> JSON
-		-  Write this **JSON** file 
+		- write this **JSON** file 
 
 			    {
 				    "email" : "",
@@ -97,12 +100,14 @@ To create new user
 					    "country" : "",
 					    "city" : "",
 					    "weight" : "",
-					    "height" : ""
+					    "height" : "",
+					    "smoking:"",
+					     "age" : "mm/dd/yyyy"
 					 }
 				}
-		- Fill the above empty places with the data you wanna send
-		- If your request was successful, you'd receive **201 Created status code** and receive the samen data you sent
-		- If your registration failed(wasn't successful) you'd receive **400 Bad Request status code** with some validation error specifying the exact issue with your request, EX:
+		- fill this empty places with the data you want
+		- If your request complete and registration done you will receive **201 Created  status** with the same date you send
+		- If your registration failed you will receive **400 Bad Request status** with some validation error to know reason for failed some thing like that
 		
 			   {
 				 "email":[
@@ -111,19 +116,19 @@ To create new user
 			   }
 
 - **Login**
-	- From this point on, I will explain the steps using **Postman** as the HTTP client 
-	- Go to this URL `(http://localhost(whatever-domain))/api/accounts/login/`
-	- Make request of type **POST**
+	-  from this point  i will use **postman only** 
+	- go to this url `/api/accounts/login/`
+	- make request of type **POST**
 	-  Select **Body**  
 	-  Select raw --> JSON
-	-  Write this **JSON** file 
+	- write this **JSON** file 
 	
 	        {
 		        "email" : "",
 		        "password" : ""
 		    }
-	- Fill these empty places with the data you wanna send
-	- If your request was successful and you're authorized you will receive **200 OK status code** with the token ID and some other data about the user
+	- fill this empty places with the data you want
+	- If your request complete and registration done you will receive **200 OK status** with token and some data about the user
 
 		    {
 			    "refresh" : "refresh token",
@@ -134,9 +139,10 @@ To create new user
 				  }
 			}
 		 
-	- If your Login/Authorization process failed you will receive **400 Bad Request status code**
+	- If your registration failed you will receive **400 Bad Request status**
 
----
+ 
 
-## TODO
-- Connect the API to the AI model to return the predication results
+
+## To Do
+- list of next to make
