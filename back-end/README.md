@@ -102,7 +102,7 @@ to create new user
 					    "weight" : "",
 					    "height" : "",
 					    "smoking:"",
-					     "age" : "mm/dd/yyyy"
+					    "birthdate" : "mm/dd/yyyy"
 					 }
 				}
 		- fill this empty places with the data you want
