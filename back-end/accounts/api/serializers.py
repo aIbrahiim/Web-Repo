@@ -81,7 +81,7 @@ class UserCreateSerializer(ModelSerializer):
         new_user.profile.weight = profile["weight"]
         new_user.profile.height = profile["height"]
         new_user.profile.smoking = profile["smoking"]
-        new_user.profile.age = profile["birthdate"]
+        new_user.profile.birthdate = profile["birthdate"]
         new_user.save()
 
         token = get_tokens_for_user(new_user)
