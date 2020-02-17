@@ -138,5 +138,23 @@ To create new user
 
 ---
 
+# Chatbot
+## How to use
+1. Need to login
+2. Add bearer token 
+3. For first time use **GET** request you will get first question
+4. in next request will be **POST** request 
+
+Question get in this form
+`{'question':"Do you have ***********?"}`
+
+answer will be in this form
+`{"ans":"y/n"}`
+
+Result will be in this from
+`{"disease":"It is likely you have : *********** "}`
+
+after geting the result back to **GET** request to start again
+
 ## TODO
 - Connect the API to the AI model to return the predication results
