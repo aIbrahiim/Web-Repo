@@ -139,7 +139,7 @@ To create new user
 ---
 
 # Chatbot
-## How to use
+## How to use  ./test
 1. Need to login
 2. Add bearer token 
 3. For first time use **GET** request you will get first question
