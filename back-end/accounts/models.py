@@ -29,7 +29,7 @@ class Profile(models.Model):
         validators = [MaxValueValidator(300),MinValueValidator(10)]
     )
     smoking = models.BooleanField(default = False)
-    
+    birthdate = models.DateField(auto_now=False,auto_now_add=False,null=True,blank=True)
     @receiver(post_save,sender = User)
     def create_user_profile(sender, instance,created, **kwargs):
         if created:
