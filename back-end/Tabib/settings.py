@@ -36,10 +36,15 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.messages',
+    'djoser',
     'rest_framework',
-    'accounts'
+    'rest_framework_simplejwt',
+    'accounts',
+    'notifcations',
+    'chatbot',
+    'imageDetection'
 ]
 
 MIDDLEWARE = [
@@ -139,3 +144,7 @@ SIMPLE_JWT = {
         'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
         'REFRESH_TOKEN_LIFETIME': timedelta(days=60),    
 }
+
+
+MEDIA_URL =  '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,"imageDetection", "media")
