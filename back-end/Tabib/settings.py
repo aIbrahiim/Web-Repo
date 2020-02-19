@@ -26,7 +26,7 @@ SECRET_KEY = '0%wshkdm^jgl(wb$$i*@)bjbnr#s5*p90!**zk156i@35&#z21'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"] #"192.168.43.120"
+ALLOWED_HOSTS = ['*'] #"192.168.43.120"
 
 
 # Application definition
@@ -36,11 +36,15 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mod_wsgi.server',
+    'django.contrib.messages',
+    'djoser',
     'rest_framework',
-    'accounts'
+    'rest_framework_simplejwt',
+    'accounts',
+    'notifcations',
+    'chatbot',
+    'imageDetection'
 ]
 
 MIDDLEWARE = [
@@ -141,4 +145,7 @@ SIMPLE_JWT = {
         'REFRESH_TOKEN_LIFETIME': timedelta(days=60),    
 }
 
+
+MEDIA_URL =  '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,"imageDetection", "media")
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
