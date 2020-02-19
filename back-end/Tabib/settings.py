@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'djoser',
     'rest_framework',
+    'mod_wsgi.server',
     'rest_framework_simplejwt',
     'accounts',
     'notifcations',
