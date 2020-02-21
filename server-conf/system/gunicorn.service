@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=tabib123
+Group=www-data
+WorkingDirectory=/home/tabib123/Web-Repo/back-end
+ExecStart=/home/tabib123/Env/firstsite/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          Tabib.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
