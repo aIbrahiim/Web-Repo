@@ -26,7 +26,7 @@ SECRET_KEY = '0%wshkdm^jgl(wb$$i*@)bjbnr#s5*p90!**zk156i@35&#z21'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] #"192.168.43.120"
+ALLOWED_HOSTS = ["*"] #"192.168.43.120"
 
 
 # Application definition
@@ -85,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'TabibDB',
-        'USER' : 'root',
-        'PASSWORD': '1998/9/25',
+        'USER' : 'tabibUser',
+        'PASSWORD': 'TABIB_123456',
         'HOST':'localhost',
         'PORT':'3306'
     }
@@ -148,3 +148,5 @@ SIMPLE_JWT = {
 
 MEDIA_URL =  '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,"imageDetection", "media")
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")

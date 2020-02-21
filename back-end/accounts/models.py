@@ -50,7 +50,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-    """
+    
     #create for first time
     @receiver(post_save,sender = User)
     def create_user_profile(sender, instance,created, **kwargs):
@@ -62,4 +62,4 @@ class Profile(models.Model):
     def save_user_profile(sender, instance,created, **kwargs):
         instance.profile.save()
 
-    """
+    
