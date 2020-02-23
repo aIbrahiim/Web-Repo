@@ -12,12 +12,14 @@ import os
 import cv2
 import pandas as pd
 from keras import backend as K
-
+from rest_framework import permissions
 
 mapper = joblib.load('current_model_mapping.pkl')
 mapper = {v:k for k,v in mapper.items()}
 
 class FileView(APIView):
+  permission_classes = [permissions.IsAuthenticated]
+
   parser_classes = (MultiPartParser, FormParser)
   
   def post(self, request, *args, **kwargs):
@@ -53,10 +55,8 @@ class FileView(APIView):
       pred_class_name = get_pred_class_name(pred_class)
 
       
-    
-
-      return Response("Predicted class is {}".format(pred_class_name.replace("%20"," ")), status=status.HTTP_201_CREATED)
-      #return JsonResponse(file_serializer, safe=False)
+      ans = "Predicted is {}".format(pred_class_name.replace("%20"," "))
+      return JsonResponse({'ans':ans}, safe=False)
     else:
       return JsonResponse("error", safe=False)
 
