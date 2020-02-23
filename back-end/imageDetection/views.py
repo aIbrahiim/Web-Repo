@@ -14,23 +14,27 @@ import pandas as pd
 from keras import backend as K
 
 
+mapper = joblib.load('current_model_mapping.pkl')
+mapper = {v:k for k,v in mapper.items()}
+
 class FileView(APIView):
   parser_classes = (MultiPartParser, FormParser)
   
   def post(self, request, *args, **kwargs):
     file_serializer = FileSerializer(data=request.data)
     
-    """
+    
     projectPath = os.path.dirname(__file__) #get the current directory of the project
 
-    modelPath = os.path.join(projectPath,'saved_models','current_model.h5' )
-    model = load_model(modelPath)
+    model = load_model('current_model.h5')
 
-    mapperPath = os.path.join(projectPath,'saved_models','current_model_mapping.pkl')
-    mapper = joblib.load(mapperPath)
+    mapper = joblib.load('current_model_mapping.pkl')
     
     mapper = {v:k for k,v in mapper.items()}
-    """
+    
+    def get_pred_class_name(pred_class_number):
+      global mapper
+      return mapper[pred_class_number]
 
     if file_serializer.is_valid():
       file_serializer.save()
@@ -44,26 +48,17 @@ class FileView(APIView):
       #print(imgPath)
       
       img = cv2.imread(imgPath)
-      
-      #print(img)
-      #print(imgPath)
-      
-      
       pic = preprocess_single_image(img)
-      #print(ImagedetectionConfig.model)
-      modelPath = os.path.join(ImagedetectionConfig.projectPath,'saved_models','current_model.h5' )
-      model = load_model(modelPath)
-      K.clear_session()
-      pred_class = model.predict_classes(pic)
-      K.clear_session()
-      """
+      pred_class = model.predict_classes(pic)[0]
       pred_class_name = get_pred_class_name(pred_class)
-      """
 
-      return Response(file_serializer.data['file'], status=status.HTTP_201_CREATED)
+      
+    
+
+      return Response("Predicted class is {}".format(pred_class_name.replace("%20"," ")), status=status.HTTP_201_CREATED)
       #return JsonResponse(file_serializer, safe=False)
     else:
-      return JsonResponse("zezo", safe=False)
+      return JsonResponse("error", safe=False)
 
 
 def preprocess_single_image(pic):
@@ -84,8 +79,10 @@ def preprocess_single_image(pic):
     return pic
 
 
-    
+
+"""
 def get_pred_class_name(pred_class_number):
     global m
     m = ImagedetectionConfig.mapper
     return m[pred_class_number]
+"""    
