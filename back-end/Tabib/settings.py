@@ -38,11 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'django.contrib.messages',
-    'accounts',
     'djoser',
     'rest_framework.authtoken',
     'rest_framework',
     'rest_framework_simplejwt',
+    'accounts',
+    'notifcations',
+    'chatbot',
+    'imageDetection'
     
 ]
 
@@ -58,7 +61,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL =  True
 
 
 ROOT_URLCONF = 'Tabib.urls'
