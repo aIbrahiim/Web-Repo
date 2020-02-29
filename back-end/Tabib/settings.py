@@ -39,12 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
     'djoser',
+    'rest_framework.authtoken',
     'rest_framework',
     'rest_framework_simplejwt',
     'accounts',
     'notifcations',
     'chatbot',
     'imageDetection'
+    
 ]
 
 MIDDLEWARE = [
@@ -55,14 +57,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'Tabib.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,7 +88,7 @@ WSGI_APPLICATION = 'Tabib.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+   'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'TabibDB',
         'USER' : 'root',
@@ -133,9 +139,14 @@ STATIC_URL = '/static/'
 
 
 REST_FRAMEWORK = {
+     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    
+   ),
+    
 }
 
 
@@ -147,4 +158,15 @@ SIMPLE_JWT = {
 
 
 MEDIA_URL =  '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,"imageDetection", "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+#MEDIA_ROOT = os.path.join(BASE_DIR,"imageDetection", "media")
+ 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Tabib Team <noreply@tabib.com>'
