@@ -17,6 +17,11 @@ gender_CHOICES = [
         ('F','Female')
 ]
 
+def upload_path(instance, filename):
+    print(instance)
+    print(filename)
+    return '/'.join(['profilePictures', filename])
+
 class Profile(models.Model):
 
     #Every user have a profile
@@ -46,6 +51,9 @@ class Profile(models.Model):
                 )
     smoking = models.BooleanField(default = False)
 
+    profile_picture  = models.FileField(upload_to="profilePictures/%Y/%m/%d/", max_length=255, null=True, blank=True)
+
+
 
     def __str__(self):
         return self.user.username
@@ -62,4 +70,3 @@ class Profile(models.Model):
     def save_user_profile(sender, instance,created, **kwargs):
         instance.profile.save()
 
- 
