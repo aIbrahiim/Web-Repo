@@ -170,3 +170,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Tabib Team <noreply@tabib.com>'
+
+
+#allow api to accept images with size 20mb at most
+FILE_UPLOAD_MAX_MEMORY_SIZE =20971520

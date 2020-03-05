@@ -30,7 +30,7 @@ class FileView(APIView):
     
     
     projectPath = os.path.dirname(__file__) #get the current directory of the project
-
+    K.clear_session()
     model = load_model('current_model.h5')
 
     mapper = joblib.load('current_model_mapping.pkl')
@@ -60,7 +60,7 @@ class FileView(APIView):
       #imgPath = os.path.join(file_serializer.data['file'])
       print(imgPath)
       img = cv2.imread(imgPath)
-     
+      
       pic = preprocess_single_image(img)
       pred_class = model.predict_classes(pic)[0]
       pred_class_name = get_pred_class_name(pred_class)
@@ -68,22 +68,23 @@ class FileView(APIView):
       
       ans = "Predicted is {}".format(pred_class_name.replace("%20"," "))
       os.remove(imgPath)
+      
+      K.clear_session()
       return JsonResponse({'ans':ans}, safe=False)
     else:
       return JsonResponse("error", safe=False)
 
 
 class FileViewAndroid(APIView):
-  #permission_classes = [permissions.IsAuthenticated]
+  permission_classes = [permissions.IsAuthenticated]
 
-  #parser_classes = (MultiPartParser, FormParser)
+  parser_classes = (MultiPartParser, FormParser)
   
   def post(self, request, *args, **kwargs):
-    #file_serializer = FileSerializer(data=request.data)
     
     
     projectPath = os.path.dirname(__file__) #get the current directory of the project
-
+    K.clear_session()
     model = load_model('current_model.h5')
 
     mapper = joblib.load('current_model_mapping.pkl')
@@ -94,13 +95,10 @@ class FileViewAndroid(APIView):
       global mapper
       return mapper[pred_class_number]
 
-    body_unicode = request.body.decode('utf-8')
-    body_data = json.loads(body_unicode)
-    img64 = str(body_data['img'])
+    img64 = str(request.data['img'])
     format, imgstr = img64.split(';base64,')
     print("format", format)
     ext = format.split('/')[-1]
-
     data = base64.b64decode(imgstr) 
     file_name = "myphoto." + ext
     path = 'media/'+file_name
@@ -112,6 +110,7 @@ class FileViewAndroid(APIView):
     pred_class = model.predict_classes(pic)[0]
     pred_class_name = get_pred_class_name(pred_class)
 
+    K.clear_session()
     if pred_class_name is not None:
       ans = "Predicted is {}".format(pred_class_name.replace("%20"," "))
       os.remove(os.path.join(mediaConfig.projectPath,file_name))
@@ -119,10 +118,6 @@ class FileViewAndroid(APIView):
     else:
       return JsonResponse("error", safe=False)
  
-
-    
-
-
 
 
 def preprocess_single_image(pic):
