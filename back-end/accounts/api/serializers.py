@@ -157,12 +157,28 @@ def get_tokens_for_user(user):
     }
 
 
+class UserDetailsSerializer(ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = [
+            'user',
+            'dateOfBirth',
+            'gender',
+            'phone',
+            'city',
+            'country',
+            'height',
+            'weight',
+            'smoking',
+            'profile_picture',
+        ]
 
 #Login stuff
 class EmailTokenObtainSerializer(TokenObtainSerializer):
     username_field = User.EMAIL_FIELD
     def validate(self, attrs):
-        
+        #user_qs = Users.objects.filter(email=self.context.get('request').user)
+
         self.user = User.objects.filter(email=attrs[self.username_field]).first()
         if not self.user:
             raise ValidationError('The user is not valid.')
@@ -183,7 +199,6 @@ class EmailTokenObtainSerializer(TokenObtainSerializer):
         
 
 class CustomTokenObtainPairSerializer(EmailTokenObtainSerializer):
-
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
 
@@ -191,7 +206,8 @@ class CustomTokenObtainPairSerializer(EmailTokenObtainSerializer):
     def get_token(cls, user):
         token =  RefreshToken.for_user(user)
         return token
-
+    
+    
     def validate(self, attrs):
         data = super().validate(attrs)
 

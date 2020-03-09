@@ -38,7 +38,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
@@ -48,11 +51,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework import permissions  
-
+from rest_framework import viewsets
+import base64
+import tempfile
+from accounts.models import Profile
 from .app_settings import (
     PasswordResetSerializer, PasswordResetConfirmSerializer,
     PasswordChangeSerializer,
+
 )
+
+from django.core import serializers
+from django.http import HttpResponse
+from django.core.files.base import ContentFile
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters(
@@ -67,16 +78,93 @@ from .serializers import(
     UserCreateSerializer,
     CustomTokenObtainPairSerializer,
     ProfileSerializer,
+    UserDetailsSerializer
 )
 
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
-    queryset = User.objects.all()
- 
+    queryset = User.objects.all()   
+  
+
+class UploadProfilePictureView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+  
+    def post(self, request, *args, **kwargs):
+        cur_user = User._default_manager.get(username=request.user)
+        profile = Profile.objects.filter(user=cur_user)[0]
+        profile.profile_picture =  request.data.get('profile_picture')
+        profile.save()
+        return Response(
+            {"detail": _("Profile Picture has been updated.")},
+            status=status.HTTP_200_OK
+        )
+
+class UploadProfilePictureAndroidView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    #parser_classes = (MultiPartParser, FormParser)
+  
+    def post(self, request, *args, **kwargs):
+        img64 = str(request.data['profile_picture'])
+        print(img64)
+        format, imgstr = img64.split(';base64,')
+        print("format", format)
+        ext = format.split('/')[-1]
+        data = base64.b64decode(imgstr) 
+        file_name = "myphoto." + ext
+        path = 'media/'+file_name
+        newFile = open(path,'wb')
+        newFile.write(data)
+        newFile.close()
+
+        cur_user = User._default_manager.get(username=request.user)
+        profile = Profile.objects.filter(user=cur_user)[0]
+        profile.profile_picture = newFile
+        profile.save()
+        return Response(
+                {"detail": _("Profile Picture has been updated.")},
+                status=status.HTTP_200_OK
+            )
+"""
+class UploadProfilePictureAndroidView(APIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+  
+    def post(self, request, *args, **kwargs):
+        profile_picture = request.data['profile_picture']
+        fh = tempfile.NamedTemporaryFile(delete=False)
+        extension =  profile_picture.name.split(".")[1]
+        filename = "{}.{}".format(fh.name,extension)
+        print(fh, extension, filename)
+        
+        cur_user = User._default_manager.get(username=request.user)
+        profile = Profile.objects.filter(user=cur_user)[0]
+        profile.profile_picture = profile_picture 
+        profile.save()
+        return Response(
+            {"detail": _("Profile Picture has been updated.")},
+            status=status.HTTP_200_OK
+        )
+        
+  """      
+    
 class EmailTokenObtainPairView(TokenObtainPairView):
+    queryset=User.objects.all()
     serializer_class = CustomTokenObtainPairSerializer
 
  
+class UserDetailsView(GenericAPIView):
+
+    def get(self, request, format=None):    
+        cur_user = User.objects.get(email=request.user.email)
+        profile = Profile.objects.filter(user=cur_user)[0]
+        user=Profile.objects.get(user=cur_user)
+        serializer =  UserDetailsSerializer(user)
+        return Response(serializer.data)
+        
+    
 class PasswordResetView(GenericAPIView):
    
     serializer_class = PasswordResetSerializer
