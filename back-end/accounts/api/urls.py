@@ -10,12 +10,18 @@ from .views import(
     PasswordResetConfirmView,
     PasswordResetView,
     PasswordChangeView,
+    UploadProfilePictureView,
+    UploadProfilePictureAndroidView,
+    UserDetailsView
  )
 
 
 urlpatterns = [
     path('register/',UserCreateAPIView.as_view(),name='register'),
     path('login/',EmailTokenObtainPairView.as_view(),name ='token_obtain_pair'),
+    path('profile/',UserDetailsView.as_view(),name='details'),
+    path('profile-picture/',UploadProfilePictureView.as_view(),name='Upload_profile_picture'),
+    path('profile-picture/Android/',UploadProfilePictureAndroidView.as_view(),name='Upload_profile_picture_Android'),
     path('refresh/',jwt_views.TokenRefreshView.as_view(),name ='refresh'),
     path('password/change/', PasswordChangeView.as_view(), name='rest_password_change'),
     path('reset/<uidb64>/<token>/',PasswordResetConfirmView.as_view(), name='password_reset_confirm'),

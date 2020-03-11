@@ -18,9 +18,9 @@ gender_CHOICES = [
 ]
 
 def upload_path(instance, filename):
-    print(instance)
-    print(filename)
-    return '/'.join(['profilePictures', filename])
+    ext = filename.split('.')[-1] 
+    new_filename = "{}{}{}".format(instance.user.username, ".", ext)
+    return '/'.join(['profilePictures',new_filename])
 
 class Profile(models.Model):
 
@@ -51,7 +51,7 @@ class Profile(models.Model):
                 )
     smoking = models.BooleanField(default = False)
 
-    profile_picture  = models.FileField(upload_to="profilePictures/%Y/%m/%d/", max_length=255, null=True, blank=True)
+    profile_picture  = models.FileField(upload_to=upload_path, max_length=255, null=True, blank=True)
 
 
 

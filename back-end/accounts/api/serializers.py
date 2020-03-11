@@ -28,6 +28,7 @@ from django.utils.encoding import force_text
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 
+from rest_framework import serializers
 
 """
 accounts serializer Consists of 3 parts
@@ -157,12 +158,28 @@ def get_tokens_for_user(user):
     }
 
 
+class UserDetailsSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Profile
+        fields = [
+            'dateOfBirth',
+            'gender',
+            'phone',
+            'city',
+            'country',
+            'height',
+            'weight',
+            'smoking',
+            'profile_picture'
+        ]
 
 #Login stuff
 class EmailTokenObtainSerializer(TokenObtainSerializer):
     username_field = User.EMAIL_FIELD
     def validate(self, attrs):
-        
+        #user_qs = Users.objects.filter(email=self.context.get('request').user)
+
         self.user = User.objects.filter(email=attrs[self.username_field]).first()
         if not self.user:
             raise ValidationError('The user is not valid.')
@@ -183,7 +200,6 @@ class EmailTokenObtainSerializer(TokenObtainSerializer):
         
 
 class CustomTokenObtainPairSerializer(EmailTokenObtainSerializer):
-
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
 
@@ -191,7 +207,8 @@ class CustomTokenObtainPairSerializer(EmailTokenObtainSerializer):
     def get_token(cls, user):
         token =  RefreshToken.for_user(user)
         return token
-
+    
+    
     def validate(self, attrs):
         data = super().validate(attrs)
 
@@ -221,8 +238,11 @@ class PasswordResetSerializer(serializers.Serializer):
         return {}
 
     def validate_email(self, value):
-        user_qs = Users.objects.filter(email=self.context.get('request').user)
-        if not user_qs.exists():
+        user_qs = self.context['request'].data.get('email')
+        print(self.context['request'].data.get('email'))
+        print(user_qs)
+        cur_user = Users.objects.filter(email=user_qs)
+        if not cur_user.exists():
             raise ValidationError("This email is not registered")
         self.reset_form = self.password_reset_form_class(data=self.initial_data)
         if not self.reset_form.is_valid():
@@ -243,7 +263,7 @@ class PasswordResetSerializer(serializers.Serializer):
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
-   
+    email = serializers.CharField(max_length=128)
     new_password1 = serializers.CharField(max_length=128)
     new_password2 = serializers.CharField(max_length=128)
 
@@ -256,10 +276,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     def validate(self, attrs):
         user = None
         request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            user = request.user
+        user = request.data.get('email')
         self._errors = {}
-        print(attrs)
         try:
             
             self.user = Users._default_manager.get(username=user)
@@ -277,7 +295,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     def save(self):
         return self.set_password_form.save()
-
 
 class PasswordChangeSerializer(serializers.Serializer):
     new_password1 = serializers.CharField(max_length=128)
