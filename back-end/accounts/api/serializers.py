@@ -160,18 +160,16 @@ def get_tokens_for_user(user):
 
 class UserDetailsSerializer(ModelSerializer):
     
+    profile = ProfileSerializer()
+    print(Users)
     class Meta:
-        model = Profile
+        model = Users
         fields = [
-            'dateOfBirth',
-            'gender',
-            'phone',
-            'city',
-            'country',
-            'height',
-            'weight',
-            'smoking',
-            'profile_picture'
+            'email',
+            'first_name',
+            'last_name',
+            'profile'
+            
         ]
 
 #Login stuff
