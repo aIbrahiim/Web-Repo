@@ -13,6 +13,9 @@ import cv2
 import pandas as pd
 from keras import backend as K
 from rest_framework import permissions
+import base64
+from django.core.files.base import ContentFile
+from media.app import mediaConfig
 
 mapper = joblib.load('current_model_mapping.pkl')
 mapper = {v:k for k,v in mapper.items()}
@@ -27,7 +30,7 @@ class FileView(APIView):
     
     
     projectPath = os.path.dirname(__file__) #get the current directory of the project
-
+    K.clear_session()
     model = load_model('current_model.h5')
 
     mapper = joblib.load('current_model_mapping.pkl')
@@ -40,43 +43,94 @@ class FileView(APIView):
 
     if file_serializer.is_valid():
       file_serializer.save()
+      print(file_serializer.data['file'])
       imgPathList = str(file_serializer.data['file']).split('/')
-      imgPath = ImagedetectionConfig.projectPath
+      
+      imgPath = mediaConfig.projectPath
+      #print(imgPath)
+      
       for p in imgPathList:
+        if p == 'media':
+          continue
         if p != '':
           imgPath = os.path.join(imgPath,p)
           #print(imgPath)
       
-      #print(imgPath)
-      
+
+      #imgPath = os.path.join(file_serializer.data['file'])
+      print(imgPath)
       img = cv2.imread(imgPath)
+      
       pic = preprocess_single_image(img)
       pred_class = model.predict_classes(pic)[0]
       pred_class_name = get_pred_class_name(pred_class)
 
       
       ans = "Predicted is {}".format(pred_class_name.replace("%20"," "))
+      os.remove(imgPath)
+      
+      K.clear_session()
       return JsonResponse({'ans':ans}, safe=False)
     else:
       return JsonResponse("error", safe=False)
 
 
+class FileViewAndroid(APIView):
+  permission_classes = [permissions.IsAuthenticated]
+
+  parser_classes = (MultiPartParser, FormParser)
+  
+  def post(self, request, *args, **kwargs):
+    
+    
+    projectPath = os.path.dirname(__file__) #get the current directory of the project
+    K.clear_session()
+    model = load_model('current_model.h5')
+
+    mapper = joblib.load('current_model_mapping.pkl')
+    
+    mapper = {v:k for k,v in mapper.items()}
+    
+    def get_pred_class_name(pred_class_number):
+      global mapper
+      return mapper[pred_class_number]
+
+    img64 = str(request.data['img'])
+    format, imgstr = img64.split(';base64,')
+    print("format", format)
+    ext = format.split('/')[-1]
+    data = base64.b64decode(imgstr) 
+    file_name = "myphoto." + ext
+    path = 'media/'+file_name
+    newFile = open(path,'wb')
+    newFile.write(data)
+    newFile.close()
+    img = cv2.imread(path)
+    pic = preprocess_single_image(img)
+    pred_class = model.predict_classes(pic)[0]
+    pred_class_name = get_pred_class_name(pred_class)
+
+    K.clear_session()
+    if pred_class_name is not None:
+      ans = "Predicted is {}".format(pred_class_name.replace("%20"," "))
+      os.remove(os.path.join(mediaConfig.projectPath,file_name))
+      return JsonResponse({'ans':ans}, safe=False)
+    else:
+      return JsonResponse("error", safe=False)
+ 
+
+
 def preprocess_single_image(pic):
+  pic = cv2.resize(pic, (120,120))
+    
+  pic = pic.astype('float32')
+    
+  pic /= 255
     
     
+  pic = pic.reshape(-1,120,120,3)
     
-    pic = cv2.resize(pic, (120,120))
-    
-    pic = pic.astype('float32')
-    
-    pic /= 255
-    
-    
-    pic = pic.reshape(-1,120,120,3)
-    #print(pic)
-    """
-    """
-    return pic
+  return pic
 
 
 
