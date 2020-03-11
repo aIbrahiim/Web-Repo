@@ -157,13 +157,9 @@ class EmailTokenObtainPairView(TokenObtainPairView):
  
 class UserDetailsView(GenericAPIView):
 
-    def get(self, request, format=None):    
-        cur_user = User.objects.get(email=request.user.email)
-        profile = Profile.objects.filter(user=cur_user)[0]
-        user=Profile.objects.get(user=cur_user)
-        serializer =  UserDetailsSerializer(user)
-        return Response(serializer.data)
-        
+    def get(self, request, *args, **kwargs):
+        ser = UserDetailsSerializer(request.user)
+        return Response(ser.data)
     
 class PasswordResetView(GenericAPIView):
    
