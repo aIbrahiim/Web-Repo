@@ -156,8 +156,11 @@ class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
+ master
 class UserDetailsView(RetrieveAPIView):
 
+=======
+ master
     def get(self, request, *args, **kwargs):
         ser = UserDetailsSerializer(request.user)
         return Response(ser.data)

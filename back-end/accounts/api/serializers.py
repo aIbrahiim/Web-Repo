@@ -158,10 +158,17 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
-class ProfileDetailsSerializer(ModelSerializer):
+
+
+class UserDetailsSerializer(ModelSerializer):
+    
+    profile = ProfileSerializer()
+    print(Users)
+ master
     class Meta:
-        model = Profile
+        model = Users
         fields = [
+ master
             'dateOfBirth',
             'gender',
             'phone',
@@ -170,6 +177,13 @@ class ProfileDetailsSerializer(ModelSerializer):
             'height',
             'weight',
             'smoking',
+=======
+            'email',
+            'first_name',
+            'last_name',
+            'profile'
+            
+ master
         ]
 
 
