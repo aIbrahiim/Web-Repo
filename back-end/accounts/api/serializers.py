@@ -155,12 +155,10 @@ def get_tokens_for_user(user):
     }
 
 
-
-class ProfileDetailsSerializer(ModelSerializer): 
+class ProfileDetailsSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = [
- 
             'dateOfBirth',
             'gender',
             'phone',
@@ -169,6 +167,7 @@ class ProfileDetailsSerializer(ModelSerializer):
             'height',
             'weight',
             'smoking'
+
         ]
 
 
