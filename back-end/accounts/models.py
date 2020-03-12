@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 import datetime
+import base64
 
 """
 This file uses to extend django user table and add more attrubutes
@@ -20,7 +21,7 @@ gender_CHOICES = [
 def upload_path(instance, filename):
     ext = filename.split('.')[-1] 
     new_filename = "{}{}{}".format(instance.user.username, ".", ext)
-    return '/'.join(['profilePictures',new_filename])
+    return '/'.join(["profile-picture", new_filename])
 
 class Profile(models.Model):
 
@@ -70,3 +71,4 @@ class Profile(models.Model):
     def save_user_profile(sender, instance,created, **kwargs):
         instance.profile.save()
 
+ 

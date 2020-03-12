@@ -29,6 +29,7 @@ from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 
 from rest_framework import serializers
+from django.conf import settings
 
 """
 accounts serializer Consists of 3 parts
@@ -158,20 +159,55 @@ def get_tokens_for_user(user):
     }
 
 
+
 class UserDetailsSerializer(ModelSerializer):
     
     profile = ProfileSerializer()
     print(Users)
+ master
+    class Meta:
+        model = Users
+        fields = [
+ master
+            'dateOfBirth',
+            'gender',
+            'phone',
+            'city',
+            'country',
+            'height',
+            'weight',
+            'smoking',
+=======
+            'email',
+            'first_name',
+            'last_name',
+            'profile'
+            
+ master
+        ]
+
+
+class UserDetailsSerializer(ModelSerializer):
+    picture_url = serializers.SerializerMethodField(source='get_picture_url')
+
+    profile = ProfileDetailsSerializer()
     class Meta:
         model = Users
         fields = [
             'email',
             'first_name',
             'last_name',
-            'profile'
-            
+            'profile',   
+            'picture_url'            
         ]
+    def get_serializer_context(self):
+            return {'request': self.request}
 
+    def get_picture_url(self, instance):
+        profile = Profile.objects.get(user=instance)
+        if not profile.profile_picture:
+            return ""
+        return profile.profile_picture.url
 #Login stuff
 class EmailTokenObtainSerializer(TokenObtainSerializer):
     username_field = User.EMAIL_FIELD

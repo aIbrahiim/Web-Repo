@@ -58,13 +58,14 @@ from accounts.models import Profile
 from .app_settings import (
     PasswordResetSerializer, PasswordResetConfirmSerializer,
     PasswordChangeSerializer,
+    
 
 )
 
 from django.core import serializers
 from django.http import HttpResponse
 from django.core.files.base import ContentFile
-
+import cv2
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters(
         'password', 'old_password', 'new_password1', 'new_password2'
@@ -78,7 +79,7 @@ from .serializers import(
     UserCreateSerializer,
     CustomTokenObtainPairSerializer,
     ProfileSerializer,
-    UserDetailsSerializer
+    UserDetailsSerializer,
 )
 
 class UserCreateAPIView(CreateAPIView):
@@ -103,7 +104,7 @@ class UploadProfilePictureView(APIView):
 
 class UploadProfilePictureAndroidView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    #parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser)
   
     def post(self, request, *args, **kwargs):
         img64 = str(request.data['profile_picture'])
@@ -117,10 +118,10 @@ class UploadProfilePictureAndroidView(APIView):
         newFile = open(path,'wb')
         newFile.write(data)
         newFile.close()
-
+        img = cv2.imread(path)
         cur_user = User._default_manager.get(username=request.user)
         profile = Profile.objects.filter(user=cur_user)[0]
-        profile.profile_picture = newFile
+        profile.profile_picture = img
         profile.save()
         return Response(
                 {"detail": _("Profile Picture has been updated.")},
@@ -154,9 +155,12 @@ class EmailTokenObtainPairView(TokenObtainPairView):
     queryset=User.objects.all()
     serializer_class = CustomTokenObtainPairSerializer
 
- 
-class UserDetailsView(GenericAPIView):
 
+ master
+class UserDetailsView(RetrieveAPIView):
+
+=======
+ master
     def get(self, request, *args, **kwargs):
         ser = UserDetailsSerializer(request.user)
         return Response(ser.data)
