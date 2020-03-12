@@ -103,7 +103,7 @@ class UploadProfilePictureView(APIView):
         )
 
 class UploadProfilePictureAndroidView(APIView):
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
   
     def post(self, request, *args, **kwargs):

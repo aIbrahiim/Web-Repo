@@ -21,7 +21,7 @@ gender_CHOICES = [
 def upload_path(instance, filename):
     ext = filename.split('.')[-1] 
     new_filename = "{}{}{}".format(instance.user.username, ".", ext)
-    return '/'.join([new_filename])
+    return '/'.join(["profile-picture", new_filename])
 
 class Profile(models.Model):
 
