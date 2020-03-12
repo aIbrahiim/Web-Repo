@@ -72,7 +72,6 @@ sensitive_post_parameters_m = method_decorator(
     )
 )
 
-#end
 User = get_user_model()
 
 from .serializers import(
@@ -156,11 +155,8 @@ class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
- master
 class UserDetailsView(RetrieveAPIView):
 
-=======
- master
     def get(self, request, *args, **kwargs):
         ser = UserDetailsSerializer(request.user)
         return Response(ser.data)
