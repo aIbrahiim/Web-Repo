@@ -164,11 +164,11 @@ class UserDetailsSerializer(ModelSerializer):
     
     profile = ProfileSerializer()
     print(Users)
- master
+ 
     class Meta:
         model = Users
         fields = [
- master
+ 
             'dateOfBirth',
             'gender',
             'phone',
@@ -177,13 +177,12 @@ class UserDetailsSerializer(ModelSerializer):
             'height',
             'weight',
             'smoking',
-=======
+
             'email',
             'first_name',
             'last_name',
             'profile'
             
- master
         ]
 
 
