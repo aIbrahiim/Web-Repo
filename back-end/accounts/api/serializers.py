@@ -193,7 +193,7 @@ class UserDetailsSerializer(ModelSerializer):
         profile = Profile.objects.get(user=instance)
         if not profile.profile_picture:
             return ""
-        return profile.profile_picture.url
+        return profile.profile_picture.url.replace('/media/profile-pictures/', '')
 #Login stuff
 class EmailTokenObtainSerializer(TokenObtainSerializer):
     username_field = User.EMAIL_FIELD
