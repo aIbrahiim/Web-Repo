@@ -57,10 +57,7 @@ class ProfileSerializer(ModelSerializer):
             'height',
             'weight',
             'smoking',
-            'profile_picture'
         ]
-
-
 
 
 class UserCreateSerializer(ModelSerializer):
@@ -121,7 +118,6 @@ class UserCreateSerializer(ModelSerializer):
         new_user.profile.height      = profile["height"]
         new_user.profile. weight     = profile["weight"]
         new_user.profile.smoking     = profile["smoking"]
-        new_user.profile.profile_picture  = profile["profile_picture"]
         new_user.save()
 
         token = get_tokens_for_user(new_user)
@@ -160,15 +156,11 @@ def get_tokens_for_user(user):
 
 
 
-class UserDetailsSerializer(ModelSerializer):
-    
-    profile = ProfileSerializer()
-    print(Users)
- master
+class ProfileDetailsSerializer(ModelSerializer): 
     class Meta:
-        model = Users
+        model = Profile
         fields = [
- master
+ 
             'dateOfBirth',
             'gender',
             'phone',
@@ -176,14 +168,7 @@ class UserDetailsSerializer(ModelSerializer):
             'country',
             'height',
             'weight',
-            'smoking',
-=======
-            'email',
-            'first_name',
-            'last_name',
-            'profile'
-            
- master
+            'smoking'
         ]
 
 
@@ -208,6 +193,8 @@ class UserDetailsSerializer(ModelSerializer):
         if not profile.profile_picture:
             return ""
         return profile.profile_picture.url.replace('/media/profile-pictures/', '')
+
+
 #Login stuff
 class EmailTokenObtainSerializer(TokenObtainSerializer):
     username_field = User.EMAIL_FIELD
